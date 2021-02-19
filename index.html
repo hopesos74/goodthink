@@ -6,24 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
 
 </head>
 
 <body>
-    <h1>오늘의 명언</h1>
 
-    
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+
+    <h1>오늘의 명언</h1>
+    <div id="goodthink"></div>
+
+
 
     <script>
         $.ajax({
             method: "GET",
-            url: "onecall.json"
+            url: "https://hopesos74.github.io/goodthink/goodthink.json"
         })
             .done(function (msg) {
                 console.log(msg);
+
+                var i = Math.floor(Math.random() * 3);
+
+                console.log(i);
+                
+                $("#goodthink").append(msg.goodthink[i].message + "&nbsp;-&nbsp;" + msg.goodthink[i].author + "<br><br>");
+
+
             });
     </script>
 </body>
