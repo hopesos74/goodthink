@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-
-
 </head>
 
 <body>
@@ -32,8 +30,14 @@
                 var i = Math.floor(Math.random() * 3);
 
                 console.log(i);
-                
-                $("#goodthink").append(msg.goodthink[i].message + "&nbsp;-&nbsp;" + msg.goodthink[i].author + "<br><br>");
+
+                var strTest = msg.goodthink[i].message;
+                strTest.replace("\n", "<br>");
+
+                console.log(strTest);
+
+
+                $("#goodthink").append(strTest + "<br>&nbsp;-&nbsp;" + msg.goodthink[i].author);
 
 
             });
