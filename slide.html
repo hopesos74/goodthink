@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Swiper demo</title>
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+    <!-- Demo styles -->
+    <style>
+        html,
+        body {
+            position: relative;
+            height: 100%;
+        }
+
+        body {
+            background: #eee;
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .swiper-container {
+            width: 100%;
+
+        }
+
+        .swiper-slide {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+
+            /* Center slide text vertically 
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+
+      
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center; */
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="img/good_001.jpg" name='targetimg' class="entry" width="780"  onclick='getRandomImage()'></div>
+            <div class="swiper-slide"><img src="img/good_002.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_003.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_004.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_005.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_006.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_007.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_008.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_009.jpg" class="entry" width="780"></div>
+            <div class="swiper-slide"><img src="img/good_010.jpg" class="entry" width="780"></div>
+        </div>
+    </div>
+
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper('.swiper-container');
+
+        $(document).ready(function () {
+            var WidthMax; //브라우저 넓이에 따라 이미지 크기를 달리한다.
+            WidthMax = ($(window).width() * 1);
+
+            $(".entry").each(function () {
+                var imgwidth = $(this).attr("width");
+                if (imgwidth > WidthMax) {
+                    var imgheight = $(this).attr("height");
+                    var ratio = imgwidth / imgheight;
+                    var newHeight = Math.round(WidthMax / ratio);
+                    $(this).attr({ width: WidthMax, height: newHeight });
+                }
+            });
+        });
+
+        function leadingZeros(n, digits) {
+            var zero = '';
+            n = n.toString();
+
+            if (n.length < digits) {
+                for (var i = 0; i < digits - n.length; i++)
+                    zero += '0';
+            }
+            return zero + n;
+        }
+
+        function getRandomImage() {
+            var imgSource = document.targetimg;
+            var next_img = Math.floor(Math.random() * 315);
+            next_img = leadingZeros(next_img, 3);
+            imgSource.src = "img/good_" + next_img + ".jpg";
+        }
+        
+    </script>
+</body>
+
+</html>
