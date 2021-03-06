@@ -37,7 +37,7 @@
     <div id="img" class="box"></div>
 
     <script>
-        var num = Math.floor(Math.random() * 315);
+        var num = Math.floor(Math.random() * 3);
 
         num = leadingZeros(num, 3);
 
@@ -70,7 +70,7 @@
 
         function getRandomImage() {
             var imgSource = document.targetimg;
-            var next_img = Math.floor(Math.random() * 315);
+            var next_img = Math.floor(Math.random() * 3);
             next_img = leadingZeros(next_img, 3);
             imgSource.src = "img/good_" + next_img + ".jpg";
         }
