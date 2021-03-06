@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 명언</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="js/centerImage.js"></script>
+
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #img {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            width: 100%;
+
+            border: 2px solid #222;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="img" class="box"></div>
+
+    <script>
+        var num = Math.floor(Math.random() * 315);
+
+        num = leadingZeros(num, 3);
+
+
+        function leadingZeros(n, digits) {
+            var zero = '';
+            n = n.toString();
+
+            if (n.length < digits) {
+                for (var i = 0; i < digits - n.length; i++)
+                    zero += '0';
+            }
+            return zero + n;
+        }
+
+        $(document).ready(function () {
+            var WidthMax; //브라우저 넓이에 따라 이미지 크기를 달리한다.
+            WidthMax = ($(window).width() * 1); 
+
+            $(".entry").each(function () {
+                var imgwidth = $(this).attr("width");
+                if (imgwidth > WidthMax) {
+                    var imgheight = $(this).attr("height");
+                    var ratio = imgwidth / imgheight;
+                    var newHeight = Math.round(WidthMax / ratio);
+                    $(this).attr({ width: WidthMax, height: newHeight });
+                }
+            });
+        });
+
+        function getRandomImage() {
+            var imgSource = document.targetimg;
+            var next_img = Math.floor(Math.random() * 315);
+            next_img = leadingZeros(next_img, 3);
+            imgSource.src = "img/good_" + next_img + ".jpg";
+        }
+          
+
+
+        console.log(num);
+
+        $("#img").append("<img src='img/good_" + num + ".jpg' name='targetimg' class='entry' width='780' onclick='getRandomImage()'>");
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>
