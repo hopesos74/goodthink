@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+</head>
+
+
+<!--
+<body onload="onload()"> -->
+
+<body>
+    <script>
+        function getParameter(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+    </script>
+
+    <script>
+
+
+        var get_code = getParameter("code");
+
+        $.ajax({
+            method: "POST",
+
+            url: "https://kauth.kakao.com/oauth/token",
+
+
+            data: { grant_type: "authorization_code", client_id: "2ba4bb284ae0f7842eb27c416c8c24cd", redirect_uri: "http://hopesos.dothome.co.kr/kakao/oauth", code: get_code },
+
+        })
+
+
+            .done(function (msg) {
+
+                access_token = msg.access_token
+
+
+                console.log(msg);
+
+                Authorization =  "Bearer " + access_token;
+
+                console.log(Authorization);
+
+                $.ajax({
+
+                    method: "POST",
+
+                    url: "https://kapi.kakao.com/v2/api/talk/memo/scrap/send",
+
+
+                     data: { request_url : "https://developers.kakao.com"},
+                     
+                     headers: { Authorization: Authorization }
+                })
+                    .done(function (access) {
+
+                        console.log(access);
+
+                    }); 
+
+            }); 
+
+        setInterval(function () {
+            $(".blink").toggle();
+        }, 250);
+
+        function bitcoin(ticker) {
+
+            $.ajax({
+                method: "GET",
+                url: "https://api.upbit.com/v1/candles/days?market=KRW-" + ticker + "&count=200"
+
+            })
+                .done(function (msg) {
+
+                    //d0_open = msg[0].opening_price;
+                    //d1_high = msg[1].high_price;
+                    //d1_low = msg[1].low_price;
+                    current_price = msg[0].trade_price;
+                    change_rate = (msg[0].change_rate * 100).toFixed(2);
+                    high_changerate = (((msg[0].high_price - msg[0].opening_price) / msg[0].opening_price) * 100).toFixed(2);
+                    low_changerate = (((msg[0].low_price - msg[0].opening_price) / msg[0].opening_price) * 100).toFixed(2);
+
+                    var open = new Array();
+                    var high = new Array();
+                    var low = new Array();
+
+                    for (i = 0; i < 200; i++) {
+                        open[i] = msg[i].opening_price;
+                        high[i] = msg[i].high_price;
+                        low[i] = msg[i].low_price;
+
+                        // d2_open = msg[1].opening_price;
+                        // d3_high = msg[2].high_price;
+                        // d3_low = msg[2].low_price;
+                    }
+
+
+
+                    change_rate = (change_rate <= 0) ? "<font color='blue'>" + change_rate + "%</font>" : "<font color='red'>+" + change_rate + "%</font>";
+
+
+                    high_changerate = (high_changerate <= 0) ? "<font color='blue'>" + high_changerate + "%</font>" : "<font color='red'>+" + high_changerate + "%</font>";
+
+
+                    low_changerate = (low_changerate <= 0) ? "<font color='blue'>" + low_changerate + "%</font>" : "<font color='red'>+" + low_changerate + "%</font>";
+
+
+                    $("#" + ticker).append("현재 : " + current_price.toLocaleString('ko-KR') + "(" + change_rate + ")&nbsp;&nbsp;&nbsp;시가 : " + open[0].toLocaleString('ko-KR') + "<br>");
+                    $("#" + ticker).append("고가 : " + msg[0].high_price.toLocaleString('ko-KR') + "(" + high_changerate + ")&nbsp;&nbsp;저가 : " + msg[0].low_price.toLocaleString('ko-KR') + "(" + low_changerate + ")<br><br>");
+                    $("#" + ticker).append("전일고가 : " + msg[1].high_price.toLocaleString('ko-KR') + "&nbsp;&nbsp; 전일저가 : " + msg[1].low_price.toLocaleString('ko-KR') + "<br><br>");
+
+
+                    //var d0_target = new Array();
+                    //var d0_profit = new Array();
+                    //var d1_target = new Array();
+                    //var d1_profit = new Array();
+                    //var d2_target = new Array();
+                    //var d2_profit = new Array();
+
+                    var target = new Array();
+                    var profit = new Array();
+                    var d_target = new Array();
+                    var d_profit = new Array();
+                    var dd_profit = new Array();
+                    var t_profit = new Array();
+
+                    var total_profit = new Array();
+
+
+                    for (i = 0; i <= 4; i++) {
+                        target[0] = open[0] + (high[1] - low[1]) * ((i + 1) / 10);
+
+
+                        profit[0] = ((current_price - target[0]) / target[0] * 100).toFixed(2);
+                        profit[0] = (profit[0] <= 0) ? "<font color='blue'>" + profit[0] + "%</font>" : "<font color='red'><b><span class='blink'>" + profit[0] + "%</span></b></font>";
+
+                        if (target[0] < msg[0].high_price) {
+
+                            $("#" + ticker).append("k=0." + (i + 1) + " -> 목표가 : " + target[0].toLocaleString('ko-KR') + " 수익률 : " + profit[0] + "<br>");
+
+                        } else {
+                            $("#" + ticker).append("k=0." + (i + 1) + " -> 목표가 : " + target[0].toLocaleString('ko-KR') + "  &nbsp;&nbsp;<b><font color='green'>매수 미체결</font></b> <br>");
+
+                        }
+
+                        for (k = 1; k <= 200; k++) {
+                            d_target[k] = open[k] + (high[k + 1] - low[k + 1]) * ((i + 1) / 10);
+                            t_profit[k] = open[k - 1] / d_target[k];
+                            d_profit[k] = open[k - 1] / d_target[k];
+                            dd_profit[k] = (d_profit[k] * 100 - 100).toFixed(2);
+                            d_profit[k] = (d_profit[k] <= 1) ? "<font color='blue'>" + d_profit[k] + "</font>" : "<font color='red'>" + d_profit[k] + "</font>";
+                            if (d_target[k] < high[k]) {
+                                // $("#" + ticker).append(" " + d_profit[k] + " ");
+                                t_profit[k] = t_profit[k];
+                            }
+                            else {
+                                // $("#" + ticker).append(" 1 ");
+                                t_profit[k] = 1;
+                            }
+                        }
+
+
+
+
+
+
+
+
+                        for (m = 1; m <= 200; m++) {
+                            total_profit[0] = 1;
+                            total_profit[m] = total_profit[m - 1] * t_profit[m];
+                        }
+                        seven_profit = ((total_profit[7] * 100) - 100).toFixed(2);
+                        seven_profit = (seven_profit <= 0) ? "<font color='blue'>" + seven_profit + "%</font>" : "<font color='red'>" + seven_profit + "%</font>";
+
+                        month_profit = ((total_profit[30] * 100) - 100).toFixed(2);
+                        month_profit = (month_profit <= 0) ? "<font color='blue'>" + month_profit + "%</font>" : "<font color='red'>" + month_profit + "%</font>";
+
+                        hundred_profit = ((total_profit[100] * 100) - 100).toFixed(2);
+                        hundred_profit = (hundred_profit <= 0) ? "<font color='blue'>" + hundred_profit + "%</font>" : "<font color='red'>" + hundred_profit + "%</font>";
+
+                        $("#" + ticker).append("7일 : " + seven_profit + ",  30일 : " + month_profit + ",  100일 : " + hundred_profit + "<br>");
+
+                        for (j = 1; j <= 7; j++) {
+                            if (d_target[j] < high[j]) {
+
+
+                                dd_profit[j] = (dd_profit[j] < 0) ? "<font color='blue'>" + dd_profit[j] + "%</font>" : "<font color='red'>" + dd_profit[j] + "%</font>";
+
+                                $("#" + ticker).append(" " + dd_profit[j] + " ");
+                                // t_profit[j] = t_profit[j];
+                            }
+                            else {
+                                $("#" + ticker).append(" 0% ");
+                                // t_profit[j] = 1;
+                            }
+                        }
+                        $("#" + ticker).append("<br><br><br>");
+
+                    }
+
+                    console.log(msg);
+                });
+
+        };
+
+
+        var v_ticker = ['BTC', 'ETH', 'ETC'];
+
+        for (i = 0; i < v_ticker.length; i++) {
+            bitcoin(v_ticker[i]);
+            document.write("<p style='font-size:20px'>" + v_ticker[i] + "</p>");
+            document.write("<div id=" + v_ticker[i] + "></div>");
+
+        }
+
+        /* function onload() {
+             setTimeout('location.reload()', 10000);
+         } */
+    </script>
+
+</body>
+
+</html>
