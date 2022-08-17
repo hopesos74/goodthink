@@ -37,9 +37,9 @@
     <div id="img" class="box"></div>
 
     <script>
-        var num = Math.floor(Math.random() * 16);
+        var num = Math.floor(Math.random() * 15);
 
-        num = leadingZeros(num, 16);
+        num = leadingZeros(num, 15);
 
 
         function leadingZeros(n, digits) {
@@ -70,14 +70,14 @@
 
         function getRandomImage() {
             var imgSource = document.targetimg;
-            var next_img = Math.floor(Math.random() * 16);
-            next_img = leadingZeros(next_img, 16);
+            var next_img = Math.floor(Math.random() * 15);
+            next_img = leadingZeros(next_img, 15);
             imgSource.src = "img/good_" + next_img + ".jpg";
         }
           
 
 
-        console.log(num);
+       
 
         $("#img").append("<img src='img/good_" + num + ".jpg' name='targetimg' class='entry' width='780' onclick='getRandomImage()'>");
 
@@ -85,7 +85,7 @@
     </script>
 
 
-
+ 
 
 </body>
 
